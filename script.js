@@ -8,14 +8,12 @@ let posPool = [];
 const fullWidth = document.documentElement.scrollWidth;
 const fullHeight = document.documentElement.scrollHeight;
 const info = document.querySelector(".info");
+const controls = document.querySelector(".simulator-controls");
+
 let totalPlanes = 40;
 let maxAltitude = 4;
 
 const alt = document.querySelector(".alt");
-
-// alt.addEventListener("input",(e)=>{
-//   maxAltitude = e.target.value
-// })
 
 canvas.width = fullWidth;
 canvas.height = fullHeight;
@@ -106,34 +104,19 @@ function checkCollision(coordinates, altitude) {
   return plane; // returns the first colliding plane or undefined
 }
 
+function drawInfo() {
+  controls.innerHTML = "";
+  const aircraftRange = document.createElement("input");
+  const altitudeRange = document.createElement("input");
+
+  aircraftRange.type = "range";
+
+  altitudeRange.type = "range";
+
+  return [aircraftRange, altitudeRange];
+}
+
 function draw() {
-  info.innerHTML = "";
-  info.insertAdjacentHTML(
-    "beforeend",
-    `
-
-    <p>Total aircrafts -> ${totalPlanes} <input type="range" id="totalAircrafts" value=${totalPlanes} max="100"></input></p>
-    <p>Maximum Altitude -> ${maxAltitude} <input type="range" id="alt" value=${maxAltitude} max="400"></input></p>
-    <section id="simulator-description">
-  <h2>Aircraft Radar Simulator</h2>
-  <p>
-    This interactive simulator displays multiple aircraft moving in real time across a dynamic radar screen. 
-    Each plane has unique properties, including position, speed, altitude, trajectory, and identification.
-  </p>
-  <ul>
-    <li><strong>Realistic radar display:</strong> Planes are represented as rectangles with outlines and labels showing their call sign, altitude, and speed.</li>
-    <li><strong>Dynamic trajectories:</strong> Each aircraft moves along a unique path, allowing for complex interactions and realistic flight patterns.</li>
-    <li><strong>Collision detection:</strong> The system detects overlaps between aircraft at the same altitude, highlighting potential conflicts.</li>
-    <li><strong>Responsive design:</strong> The radar canvas dynamically adjusts to the screen size for seamless display on any device.</li>
-    <li><strong>Randomized aircraft generation:</strong> Each plane is assigned a unique call sign and flight parameters to simulate real-world air traffic variability.</li>
-  </ul>
-  <p>
-    This simulator is a learning and visualization tool for aviation enthusiasts, providing hands-on experience with aircraft positioning, movement, and radar operations.
-  </p>
-</section>
-    `,
-  );
-
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, fullWidth, fullHeight);
   planes.forEach((el) => (el.color = "lime")); // reset all colors first
@@ -159,7 +142,7 @@ function draw() {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(el.name, x + 40, y + 10);
-    ctx.fillText(`Alt ${el.altitude}ft`, x + 40, y + 20);
+    ctx.fillText(`Alt ${el.altitude}00ft`, x + 40, y + 20);
     ctx.fillText(`${el.speed}knots`, x + 40, y + 30);
     ctx.beginPath();
     ctx.moveTo(x + 20, y + 20); // start point
@@ -177,3 +160,8 @@ function draw() {
 }
 
 draw();
+
+window.addEventListener("resize", function () {
+  canvas.width = document.documentElement.scrollWidth;
+  canvas.height = document.documentElement.scrollHeight;
+});
